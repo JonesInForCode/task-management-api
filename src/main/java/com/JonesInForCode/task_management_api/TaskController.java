@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -32,10 +33,12 @@ public class TaskController {
     @Autowired
     private TaskRepository taskRepository;
 
-    @PostMapping
+    @PostMapping("/tasks")
     public ResponseEntity<Task> createTask(@RequestBody @Valid Task task) {
         Task createdTask = taskRepository.save(task);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                                        .header("Location", "/api/tasks/" + createdTask.getId())
+                                        .body(createdTask);
     }
 
     @GetMapping
